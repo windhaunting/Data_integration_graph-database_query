@@ -1,0 +1,15 @@
+\begin{theindex}
+
+  \item rangeDifferenceMetrics \textit{(module)}, \hyperpage{2--3}
+    \subitem rangeDifferenceMetrics.rangeDifferenceMetrics \textit{(class)}, 
+		\hyperpage{2--3}
+      \subsubitem rangeDifferenceMetrics.rangeDifferenceMetrics.getAllNumericalRangeDiffScore \textit{(method)}, 
+		\hyperpage{2}
+      \subsubitem rangeDifferenceMetrics.rangeDifferenceMetrics.getPercentilesAllNumerical \textit{(method)}, 
+		\hyperpage{2}
+      \subsubitem rangeDifferenceMetrics.rangeDifferenceMetrics.getRangeMetricNumericalUsed \textit{(method)}, 
+		\hyperpage{2}
+      \subsubitem rangeDifferenceMetrics.rangeDifferenceMetrics.getRangePercentiles \textit{(method)}, 
+		\hyperpage{2}
+
+\end{theindex}

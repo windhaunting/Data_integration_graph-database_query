@@ -1,0 +1,13 @@
+\begin{theindex}
+
+  \item bucketDotProductMetrics \textit{(module)}, \hyperpage{2}
+    \subitem bucketDotProductMetrics.bucketDotProductMetrics \textit{(class)}, 
+		\hyperpage{2}
+      \subsubitem bucketDotProductMetrics.bucketDotProductMetrics.bucketDotProduct \textit{(method)}, 
+		\hyperpage{2}
+      \subsubitem bucketDotProductMetrics.bucketDotProductMetrics.dotProduct \textit{(method)}, 
+		\hyperpage{2}
+      \subsubitem bucketDotProductMetrics.bucketDotProductMetrics.getAllNumericalBucketdotProductsScore \textit{(method)}, 
+		\hyperpage{2}
+
+\end{theindex}

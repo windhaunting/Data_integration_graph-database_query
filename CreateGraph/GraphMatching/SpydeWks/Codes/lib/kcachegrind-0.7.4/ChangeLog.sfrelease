@@ -1,0 +1,20 @@
+2013/04/05: KCachegrind 0.7.4
+	* Fix loading bug introduced in 0.7.2
+	* QCachegrind compiles with Qt5 now
+
+2012/11/06: KCachegrind 0.7.3
+	* Last-minute change in 0.7.2 to support loading
+	  multiple files on command line broke Load dialog.
+	  Release 0.7.3 only fixes this issue.
+
+2012/10/17: KCachegrind 0.7.2
+	* Load multiple files on command line into one window
+	* Support large number of event types (200)
+	* Misc fixes
+
+2011/11/14: KCachegrind 0.7.1
+	* KCachegrind: use callgrind_control to request a dump.
+	  The old way will not work with Callgrind in VG > 3.7
+
+2011/9/23: KCachegrind 0.7.0
+	* Compiles without Qt3 support

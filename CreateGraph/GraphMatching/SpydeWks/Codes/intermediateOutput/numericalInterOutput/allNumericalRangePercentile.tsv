@@ -1,0 +1,21 @@
+table.field	20% percentile	30% percentile	80% percentile	90% percentile
+tss_service_levels_d_v.service_level_id	5	7	17	22
+tss_workgroups_d.created_by	90101	115404	230083141	230103870
+tss_service_levels_d_v.created_by	115001	115701	119198	119897
+tss_calendars_d.created_by	138113885	207096284	1900000000	1900000000
+tss_service_levels_d_v.bl_load_id	2568	6502	34027	34269
+tss_workgroups_d.sub_region_key	668	1554	9166	9500
+tss_service_levels_d_v.bl_service_level_key	9	13	33	103
+tss_workgroups_d.bl_load_id	8796	17160	34424	34715
+tss_calendars_d.bl_load_id	1	1	1	1
+tss_workgroups_d.last_updated_by	121159	230003942	1902582783	1902723347
+tss_service_levels_d_v.last_update_by	112083	113147	118468	119532
+tss_workgroups_d.tech_id	13	19	61	67
+tss_calendars_d.last_updated_by	138113885	207096284	1900000000	1900000000
+tss_service_levels_d_v.sdp_service_level_incl	1	1	1	1
+tss_workgroups_d.bl_workgroup_key	668	1554	9166	9500
+tss_workgroups_d.theater_key	668	1554	9166	9500
+tss_workgroups_d.workgroup_id	41137	45630	206140	247146
+tss_service_levels_d_v.service_region_id	285	285	285	285
+tss_workgroups_d.wkg_mgr_resource_id	100001718	100002524	100062257	100106811
+tss_service_levels_d_v.business_process_id	1019	1020	1026	1028

@@ -1,0 +1,34 @@
+\begin{theindex}
+
+  \item nonNumericalRecordPairsMatching \textit{(module)}, 
+		\hyperpage{2--3}
+    \subitem nonNumericalRecordPairsMatching.fieldPairSim \textit{(class)}, 
+		\hyperpage{2}
+      \subsubitem nonNumericalRecordPairsMatching.fieldPairSim.\_\_init\_\_ \textit{(method)}, 
+		\hyperpage{2}
+    \subitem nonNumericalRecordPairsMatching.nonNumericalRecordPairsMatching \textit{(class)}, 
+		\hyperpage{2--3}
+      \subsubitem nonNumericalRecordPairsMatching.nonNumericalRecordPairsMatching.cosinSimiAmongRecord \textit{(method)}, 
+		\hyperpage{2}
+      \subsubitem nonNumericalRecordPairsMatching.nonNumericalRecordPairsMatching.filterColumnsWithSample \textit{(method)}, 
+		\hyperpage{2}
+      \subsubitem nonNumericalRecordPairsMatching.nonNumericalRecordPairsMatching.generatePairsTupleTobeMatched \textit{(method)}, 
+		\hyperpage{2}
+      \subsubitem nonNumericalRecordPairsMatching.nonNumericalRecordPairsMatching.getAllNonumericalCosSimiRecordWiseMap \textit{(method)}, 
+		\hyperpage{3}
+      \subsubitem nonNumericalRecordPairsMatching.nonNumericalRecordPairsMatching.getParsedSetMap \textit{(method)}, 
+		\hyperpage{2}
+      \subsubitem nonNumericalRecordPairsMatching.nonNumericalRecordPairsMatching.getSamplesNonumericalCosSimiRecordWise \textit{(method)}, 
+		\hyperpage{2}
+      \subsubitem nonNumericalRecordPairsMatching.nonNumericalRecordPairsMatching.getSamplesNonumericalCosSimiRecordWiseMap \textit{(method)}, 
+		\hyperpage{3}
+      \subsubitem nonNumericalRecordPairsMatching.nonNumericalRecordPairsMatching.multithreadgetAllNonNumericalCosinSimi \textit{(method)}, 
+		\hyperpage{3}
+      \subsubitem nonNumericalRecordPairsMatching.nonNumericalRecordPairsMatching.multithreadgetNonNumericalCosinSimi \textit{(method)}, 
+		\hyperpage{3}
+      \subsubitem nonNumericalRecordPairsMatching.nonNumericalRecordPairsMatching.readSamplesResultTopKMatchingRatio \textit{(method)}, 
+		\hyperpage{3}
+      \subsubitem nonNumericalRecordPairsMatching.nonNumericalRecordPairsMatching.sortAndWritetoFile \textit{(method)}, 
+		\hyperpage{3}
+
+\end{theindex}

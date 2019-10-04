@@ -1,0 +1,276 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Dec 29 10:45:23 2015
+
+@author: fubao
+"""
+
+import numpy as np
+import time
+import itertools
+import sys
+import random
+import cProfile, pstats, io
+
+from math import sqrt
+from math import floor
+from blist import blist
+from threading import Thread
+
+sys.path.insert(0, 'common') 
+
+from commonReadFile import commonReadFile
+from preprocess import preprocess
+from multiprocessing.dummy import Pool as ThreadPool 
+from readDatabaseFile import fieldPairSim
+
+Intermediate_DirFiles = ['intermediateOutput/nonNumericalInterOutput/', 'intermediateOutput/nonNumericalInterOutput/nonNumericalSamplesMatchingRatio.tsv']
+
+        
+        
+        
+#non-numerical matching algorithm class
+class nonNumericalRecordPairsMatching(object):
+     
+    tbFieldAllNonNumericalValuesMap = {}
+    prefixLength = 2
+    sampleRecordsNum = 4000
+    recordPrSimiThreshold = 0.428
+    finalNonNumericalOutputDir = ""
+    #outFileNonNumericalRatioScore = ""
+    threadNum = 4
+    
+    def __init__(self):
+        self.lstTopPairsTobeAllMatched = blist()     # every item is TbfieldPairSim object
+    
+    def generatePairsTupleTobeMatched(self, tbFieldAllNonNumericalValuesMap):
+        pairsTupleTobeMatched = set()
+        for tbfdA in tbFieldAllNonNumericalValuesMap:
+            for tbfdB in tbFieldAllNonNumericalValuesMap:
+                tbA = tbfdA.strip().split('.')[0]
+                tbB = tbfdB.strip().split('.')[0]
+                if (tbA != tbB):
+                    if tbfdA <= tbfdB:                        #in order, convenient to watch
+                       # tuplePrs = (tbfdA, tbfdB)
+                        prs = tbfdA + '-' + tbfdB
+                    else:
+                      #  tuplePrs = (tbfdB, tbfdA)
+                        prs = tbfdB + '-' + tbfdA
+
+                    pairsTupleTobeMatched.add(prs)
+        print ('pairsTupleTobeMatched len ', len(pairsTupleTobeMatched))
+        return pairsTupleTobeMatched
+        
+        
+
+    def cosinSimiAmongRecord(self, recA, recB, vABCacheMap):
+        preproc = preprocess()
+        #print ('len vACacheMap', len(vACacheMap), len(vBCacheMap))
+        #print ('in vBCacheMap')
+
+      #  totalStartOne = time.time()
+        resCos = preproc.cosSimilarity(vABCacheMap[recA], vABCacheMap[recB])
+      #  totalEndOne = time.time()
+       # timeConsume = totalEndOne - totalStartOne
+        #print ('cosSimilarity time: ' , timeConsume)
+        return resCos
+
+    def getParsedSetMap(self, lsValA, lsValB, prefixLength):
+        preproc = preprocess()
+        vABCacheMap = {}
+        lsVals = set(lsValA) | set(lsValB)
+        vABCacheMap = {rec: preproc.parseStemOneRecord(rec, prefixLength) for rec in lsVals}
+        #vABCacheMap = {recA: preproc.parseStemOneRecord(recA, adjustLength) for recA in lsValA}
+        return vABCacheMap
+
+     #decide which columns pair should be discarded 
+    def filterColumnsWithSample(self, samplesFlag, prA, prB, lsValA, lsValB, prefixLength, sampleNumofRecords, threshold, pairsNameLstA, pairsNameLstB,cosResLst, cachedSet):
+        preproc = preprocess()
+        #print ('xxxxxlen lsValA, lsValB': , len(lsValA), len(lsValB))
+
+        if (samplesFlag):
+        #if the column range is bigger than sampleNumofRecords only
+            if sampleNumofRecords < len(set(lsValA)):
+                #fetch the random sample to get a new lsValA
+                lsValA = random.sample(set(lsValA), sampleNumofRecords)
+
+            if sampleNumofRecords < len(set(lsValB)):
+                lsValB = random.sample(set(lsValB), sampleNumofRecords)
+
+        vABCacheMap = self.getParsedSetMap(lsValA, lsValB, prefixLength)
+       # print ('vABCacheMap len' , len(vABCacheMap))
+        countTruePairs = 0
+        for vA in set(lsValA):                  #matching between records
+            for vB in set(lsValB):
+                #calculate cosine similarity
+                #strPr = vA + ";" + vB
+               # if strPr not in cachedSet:          #too many memory consumed with cached pair                   
+                cosRes = self.cosinSimiAmongRecord(vA, vB, vABCacheMap)
+                #cachedSet.add(strPr)               #no matter threshold, all records visited need to be cached
+                if (cosRes >= threshold):
+                    vA = vA.replace('\t', ' ').strip()          #in case string contains 'tab'
+                    vB = vB.replace('\t', ' ').strip()
+                    pairsNameLstA.append(vA)
+                    pairsNameLstB.append(vB)
+                    cosResLst.append(cosRes)
+                   
+                countTruePairs += 1
+        return countTruePairs
+   
+    #calculate record-wise similarity, samplesFlag determines the sample or all    
+    def getSamplesNonumericalCosSimiRecordWise(self, pair, samplesFlag, tbFieldAllNonNumericalValuesMap, prefixLength, sampleRecordsNum, recordPrSimiThreshold, finalNonNumericalOutputDir):
+        comRdFileObj = commonReadFile()
+
+        i = 0
+        #get field values
+        if (samplesFlag):
+            prA = pair.strip().split('-')[0].lower()            #tb.field A
+            prB = pair.strip().split('-')[1].lower()
+        else:
+            prA = pair.fieldA.strip()
+            prB = pair.fieldB.strip()
+        #get index 
+        if prA in tbFieldAllNonNumericalValuesMap and prB in tbFieldAllNonNumericalValuesMap:
+            #get all tb field values
+           # print ('pairsDDDDDDDDD: ', prA, prB)
+
+            lsValA = tbFieldAllNonNumericalValuesMap[prA]               #get values
+            lsValB = tbFieldAllNonNumericalValuesMap[prB]
+            # print ('newLsValA AAAA: ' , prA, prB, len(lsValA),lsValA[0], len(lsValB), lsValB[0])
+            writeWholeLst = blist([])                   #write rows lists
+            cosResLst = blist([])
+            pairsNameLstA = blist([])
+            pairsNameLstB = blist([])
+            cachedSet = set()                      #record whether visited before
+            totalNumRecordPrsLst = blist([])
+            pairsNameLstA.append(str(prA))
+            pairsNameLstB.append(str(prB))               
+            cosResLst.append('Cosine Similarity')
+            totalNumRecordPrsLst.append('Total Number of Record Pairs')
+            
+            countTruePairs = self.filterColumnsWithSample(samplesFlag, prA, prB, lsValA, lsValB, prefixLength, sampleRecordsNum, recordPrSimiThreshold, pairsNameLstA, pairsNameLstB,cosResLst, cachedSet)
+            
+            # if any record pair similarity above threshold, run again sample record similarity
+            if (len(pairsNameLstA) > 1):                                    #no any pair qualifies
+                writeWholeLst.append(pairsNameLstA)
+                writeWholeLst.append(pairsNameLstB)
+                writeWholeLst.append(cosResLst)
+                
+                fdprsObj = fieldPairSim(prA, prB, len(pairsNameLstA)/countTruePairs)
+                self.lstTopPairsTobeAllMatched.append(fdprsObj)
+                
+                if(len(writeWholeLst) >= 3):
+                    #select records, numOfRecords,
+                    tbA = prA.split('.')[0]
+                    fdA = prA.split('.')[1]
+                    tbB = prB.split('.')[0]
+                    fdB = prB.split('.')[1]
+                    outFile2 =  str(tbA) + '__'+ str(fdA)+ '-' + str(tbB) + '__' + str(fdB)
+                
+                    if (samplesFlag):                  #sample result output dir
+                        finalNonNumericalOutputDir = Intermediate_DirFiles[0]
+                        fd = open(finalNonNumericalOutputDir + outFile2 + '.tsv','w')
+                    comRdFileObj.writeListsColumnsToFileAppendWriterTsv(fd, writeWholeLst)
+                    i = i + 1
+                    fd.close()
+                    writeWholeLst = blist([])
+                # totalEndOne = time.time()
+                # print ('total time One', totalEndOne - totalEndOneFilter)
+ 
+    #multithread used map function samples record first
+    def getSamplesNonumericalCosSimiRecordWiseMap(self, pair):
+
+
+        self.getSamplesNonumericalCosSimiRecordWise(pair, True, self.tbFieldAllNonNumericalValuesMap, self.prefixLength, self.sampleRecordsNum, self.recordPrSimiThreshold, self.finalNonNumericalOutputDir)
+        
+    
+    #read from filematching ratio file to get top k pair for all non-numerical matching
+    def readSamplesResultTopKMatchingRatio(self, outFileNonNumericalRatioScoreSample, outFileNonNumericalRatioScoreAll):
+        comRdFileObj = commonReadFile()
+        pairLst = comRdFileObj.readFileTwoColumnIntolistTsv(outFileNonNumericalRatioScoreSample)
+        self.multithreadgetAllNonNumericalCosinSimi(pairLst, outFileNonNumericalRatioScoreAll)
+
+
+    #multithread used map function run all non-numerical records pairs
+    def getAllNonumericalCosSimiRecordWiseMap(self, pair):
+        self.getSamplesNonumericalCosSimiRecordWise(pair, False, self.tbFieldAllNonNumericalValuesMap, self.prefixLength, self.sampleRecordsNum, self.recordPrSimiThreshold, self.finalNonNumericalOutputDir)
+        
+ 
+    #sort the matching ratio and write into file
+    def sortAndWritetoFile(self, lstTopPairsTobeAllMatched, outFile):
+        # sort the matching ratio
+        print ('len xxx lstTopPairsTobeAllMatched ', len(self.lstTopPairsTobeAllMatched))
+        comRdFileObj = commonReadFile()
+        self.lstTopPairsTobeAllMatched = sorted(self.lstTopPairsTobeAllMatched, key=lambda pairval: pairval.value, reverse=True)
+        #write sample running result
+        fd = open(outFile,'a')
+        for pr in self.lstTopPairsTobeAllMatched:
+            strVar = pr.fieldA + '\t' + pr.fieldB + '\t' + str(pr.value) + '\t' + '\n'
+            comRdFileObj.writeStrRowToFileAppendWriter(fd, strVar)
+        fd.close()
+
+        
+    #use thread pool to automatically iterate the set of all top pairsAllTop to do matching
+    def multithreadgetAllNonNumericalCosinSimi(self, pairsAllTop, outFileNonNumericalRatioScoreAll):
+        #for pr in pairsTupleTobeMatched:
+        #    print ('prrrrrr ', pr)
+
+        comRdFileObj = commonReadFile()                                       # clear only matching ratio output file
+        comRdFileObj.clearFileContent(outFileNonNumericalRatioScoreAll)               #clear file
+        
+        self.lstTopPairsTobeAllMatched = blist()              #clear at the beginning
+        pool = ThreadPool(self.threadNum)
+        pool.map(self.getAllNonumericalCosSimiRecordWiseMap, pairsAllTop)
+        pool.close() 
+        pool.join()
+                
+         #write all matching ratio result
+        self.sortAndWritetoFile(self.lstTopPairsTobeAllMatched, outFileNonNumericalRatioScoreAll)
+
+
+    #use thread pool to automatically iterate the set of pairsTupleTobeMatched to do matching
+    def multithreadgetNonNumericalCosinSimi(self, pairsTupleTobeMatched, outFileNonNumericalRatioScoreAll):
+        #    print ('prrrrrr ', pr)
+        #profile begin
+        pr = cProfile.Profile()
+        pr.enable()
+
+        outFileNonNumericalRatioScoreSample = Intermediate_DirFiles[1]
+
+        comRdFileObj = commonReadFile()                                       # clear only matching ratio output file
+        comRdFileObj.clearFileContent(outFileNonNumericalRatioScoreSample)               #clear file
+        self.lstTopPairsTobeAllMatched = blist()              #clear at the beginning
+        pool = ThreadPool(self.threadNum)
+        pool.map(self.getSamplesNonumericalCosSimiRecordWiseMap, pairsTupleTobeMatched)
+        pool.close() 
+        pool.join()
+        
+        #write samples matching ratio result
+        print ('multithreadgetNonNumericalCosinSimi ttt ', len(self.lstTopPairsTobeAllMatched), outFileNonNumericalRatioScoreSample)
+
+        self.sortAndWritetoFile(self.lstTopPairsTobeAllMatched, outFileNonNumericalRatioScoreSample)
+
+        #running all sample result, two ways. one way is to read file, the other way is to read from self.lstTopPairsTobeAllMatched
+        #self.readSamplesResultTopKMatchingRatio(outFileNonNumericalRatioScoreSample, outFileNonNumericalRatioScoreAll)
+        
+        # the second way to do all mathcing
+       # self.multithreadgetAllNonNumericalCosinSimi(self.lstTopPairsTobeAllMatched, outFileNonNumericalRatioScoreAll)
+
+        pr.disable()
+        s = io.StringIO()
+        sortby = 'cumulative'
+        ps = pstats.Stats(pr, stream=s).sort_stats(sortby)
+        ps.print_stats()
+        print ('s.getvalue', s.getvalue())
+        pr.dump_stats('tttttt.txt')
+        
+    #use thread pool to automatically iterate the set of pairsTupleTobeMatched to do matching
+    def multithreadgetNonNumericalCosinSimiAllNosamples(self, pairsTupleTobeMatched, outFileNonNumericalRatioScoreAll):
+        #for pr in pairsTupleTobeMatched:
+        #    print ('prrrrrr ', pr)
+        
+        #running all sample result, two ways. one way is to read file, the other way is to read from self.lstTopPairsTobeAllMatched
+        #self.readSamplesResultTopKMatchingRatio(outFileNonNumericalRatioScoreSample, outFileNonNumericalRatioScoreAll)
+        
+        # the second way  to do all mathcing
+        self.multithreadgetAllNonNumericalCosinSimi(self.lstTopPairsTobeAllMatched, outFileNonNumericalRatioScoreAll)

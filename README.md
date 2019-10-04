@@ -1,6 +1,1 @@
-<<<<<<< HEAD
-# data_integration_graph_query
-=======
->>>>>>> first commit
-database, creating graph, query_graph
-# data_integration_graph_query
+Integrating a relational database into a graphdatabase for efficient data management and query

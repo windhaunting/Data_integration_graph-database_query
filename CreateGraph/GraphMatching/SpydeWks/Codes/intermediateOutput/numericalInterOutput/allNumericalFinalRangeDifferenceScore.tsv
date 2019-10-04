@@ -1,0 +1,16 @@
+table.field A	table.field B	range difference score
+tss_calendars_d.created_by	tss_workgroups_d.sub_region_key	1.999977835573068	
+tss_calendars_d.last_updated_by	tss_workgroups_d.sub_region_key	1.999977835573068	
+tss_calendars_d.created_by	tss_workgroups_d.theater_key	1.999977835573068	
+tss_calendars_d.last_updated_by	tss_workgroups_d.theater_key	1.999977835573068	
+tss_calendars_d.created_by	tss_workgroups_d.bl_workgroup_key	1.999977835573068	
+tss_calendars_d.last_updated_by	tss_workgroups_d.bl_workgroup_key	1.999977835573068	
+tss_service_levels_d_v.created_by	tss_workgroups_d.sub_region_key	1.8361479537147312	
+tss_service_levels_d_v.created_by	tss_workgroups_d.theater_key	1.8361479537147312	
+tss_service_levels_d_v.created_by	tss_workgroups_d.bl_workgroup_key	1.8361479537147312	
+tss_service_levels_d_v.last_update_by	tss_workgroups_d.sub_region_key	1.8350873041290756	
+tss_service_levels_d_v.last_update_by	tss_workgroups_d.theater_key	1.8350873041290756	
+tss_service_levels_d_v.last_update_by	tss_workgroups_d.bl_workgroup_key	1.8350873041290756	
+tss_service_levels_d_v.bl_load_id	tss_workgroups_d.sub_region_key	1.1714137015158916	
+tss_service_levels_d_v.bl_load_id	tss_workgroups_d.theater_key	1.1714137015158916	
+tss_service_levels_d_v.bl_load_id	tss_workgroups_d.bl_workgroup_key	1.1714137015158916	

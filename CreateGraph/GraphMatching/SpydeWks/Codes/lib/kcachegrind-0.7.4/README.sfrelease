@@ -1,0 +1,22 @@
+HOWTO for SourceForge Release
+-----------------------------
+
+On master:
+- add important changes to ChangeLog
+
+Bump version independent from KDE releases
+- git checkout sfrelease
+- git merge master
+- bump version in CMakeList.txt
+  and qcachegrind/qcgtoplevel.cpp
+- git commit -a -m "Bump version for SF release"
+- git tag VERSION
+
+Create source package:
+git archive --prefix kcachegrind-VERSION/ VERSION > kcachegrind-VERSION.tar
+gzip kcachegrind-VERSION.tar
+
+Copy to SF:
+scp kcachegrind-VERSION.tar.gz weidendo,kcachegrind@web.sf.net:www
+
+Update WWW

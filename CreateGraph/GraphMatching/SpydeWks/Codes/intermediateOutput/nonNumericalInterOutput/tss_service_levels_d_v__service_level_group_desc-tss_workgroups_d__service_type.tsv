@@ -1,0 +1,7 @@
+tss_service_levels_d_v.service_level_group_desc	tss_workgroups_d.service_type	Cosine Similarity
+scheduled	esc-scheduling	0.7071067811865475
+not applicable	not applicable	1.0
+not applicable	not available	0.5
+not available	not applicable	0.5
+not available	not available	1.0
+error	error	1.0

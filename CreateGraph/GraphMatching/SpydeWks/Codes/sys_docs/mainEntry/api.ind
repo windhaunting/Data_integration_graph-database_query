@@ -1,0 +1,13 @@
+\begin{theindex}
+
+  \item mainEntry \textit{(module)}, \hyperpage{2--3}
+    \subitem mainEntry.dataMatching \textit{(class)}, \hyperpage{2--3}
+      \subsubitem mainEntry.dataMatching.nonNumericalMatching \textit{(method)}, 
+		\hyperpage{2}
+      \subsubitem mainEntry.dataMatching.numericalMatching \textit{(method)}, 
+		\hyperpage{2}
+      \subsubitem mainEntry.dataMatching.readTsvDatabase \textit{(method)}, 
+		\hyperpage{2}
+    \subitem mainEntry.main \textit{(function)}, \hyperpage{2}
+
+\end{theindex}

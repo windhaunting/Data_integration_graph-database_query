@@ -1,0 +1,4 @@
+table.field A	table.field B	bucket dot product score
+tss_service_levels_d_v.bl_load_id	tss_workgroups_d.sub_region_key	0.0115354756701	
+tss_service_levels_d_v.bl_load_id	tss_workgroups_d.bl_workgroup_key	0.0115354756701	
+tss_service_levels_d_v.bl_load_id	tss_workgroups_d.theater_key	0.0115354756701	
