@@ -157,6 +157,8 @@ class rangeDifferenceMetrics(object):
 
         print ('len primaryKeysSet, allNumericalfieldRangeMap ', len(primaryKeysSet), len(self.allNumericalfieldRangeMap))
                 
+        
+
         pool = ThreadPool(threadNum)
         pool.map(self.getAllNumericalRangeDiffScoreMap, primaryKeysSet)
         pool.close() 

@@ -139,6 +139,16 @@ class commonReadFile(object):
                 twoColumnMap[key]= row[1::]
         return twoColumnMap
         
+
+    #write two column, first column is key, the extra columns as value
+    def writeFileTbFieldValueIntoMapTsv(self, twoColumnMapValues, outFile):
+        
+        with open(outFile, mode='w') as twoColumn_file:
+            twoColumn_writer = csv.writer(twoColumn_file, delimiter='\t', quoting=csv.QUOTE_NONE, escapechar='\\')
+            
+            for k,v in twoColumnMapValues.items():
+                twoColumn_writer.writerow([k] + v)
+                
     #get non-numerical fields index for linecache.getline(inputFile, lineNum) in the future
     def getIndexofTbFieldsNonNumericalCsv(self, inputFile):
         IndexTbFieldMap = {}
@@ -305,6 +315,8 @@ class commonReadFile(object):
             lstTriples.append(fdprsObj)
         return lstTriples
     
+
+                
     #write similarity map , similarityMap key is pair(), value is a double type
     def writeEstimateSimilarityMap(self, outFile, similarityMap):
         #print ('len129: ', len(self.estMinHashSimilarityMap))
