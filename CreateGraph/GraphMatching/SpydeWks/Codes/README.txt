@@ -1,8 +1,8 @@
+Database integration by field matching
 
+Proposed several algorithms to match numerical and non-numerical field pairs
 
+How to run:
 
-library used:
+Run matchingApp.py
 
-pyprof2calltree             (to profile only)
-
-gprof2dot                   (to profile only)
