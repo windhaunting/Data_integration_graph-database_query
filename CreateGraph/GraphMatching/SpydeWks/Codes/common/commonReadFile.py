@@ -148,7 +148,8 @@ class commonReadFile(object):
             
             for k,v in twoColumnMapValues.items():
                 twoColumn_writer.writerow([k] + v)
-                
+        
+    
     #get non-numerical fields index for linecache.getline(inputFile, lineNum) in the future
     def getIndexofTbFieldsNonNumericalCsv(self, inputFile):
         IndexTbFieldMap = {}
